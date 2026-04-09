@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Internship Auth</title>
+    <style>
+        /* Basic Setup */
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        
+        /* Modern Gradient Background */
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+        }
+
+        /* Glassmorphism Card Design */
+        .auth-card { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2); 
+            width: 100%; 
+            max-width: 420px; 
+            transition: all 0.3s ease;
+        }
+        .auth-card h2 { text-align: center; font-size: 1.8rem; font-weight: 600; margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .auth-card p { text-align: center; color: rgba(255, 255, 255, 0.8); margin-bottom: 2rem; font-size: 0.95rem; }
+
+        /* Inputs for Glass Design */
+        .input-group { margin-bottom: 1.5rem; position: relative; }
+        .input-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.5px; }
+        .input-group input { 
+            width: 100%; 
+            padding: 0.85rem 1rem; 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3); 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            color: white;
+            outline: none; 
+            transition: 0.3s; 
+        }
+        .input-group input::placeholder { color: rgba(255, 255, 255, 0.5); }
+        .input-group input:focus { 
+            border-color: #ffffff; 
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1); 
+        }
+
+        /* Show/Hide Name Field */
+        #nameGroup { display: none; }
+
+        /* Toggle Password Button */
+        .toggle-btn { position: absolute; right: 12px; top: 40px; background: none; border: none; color: rgba(255, 255, 255, 0.8); cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+        .toggle-btn:hover { color: white; }
+        
+        /* Forgot Password */
+        .form-options { display: flex; justify-content: flex-end; margin-bottom: 1.5rem; }
+        .form-options a { color: rgba(255, 255, 255, 0.9); font-size: 0.85rem; text-decoration: none; font-weight: 500; transition: 0.2s; }
+        .form-options a:hover { color: white; text-decoration: underline; }
+
+        /* Submit Button (High Contrast) */
+        .submit-btn { 
+            width: 100%; 
+            padding: 0.9rem; 
+            background-color: #ffffff; 
+            color: #764ba2; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1.05rem; 
+            font-weight: 700; 
+            cursor: pointer; 
+            margin-bottom: 1.5rem; 
+            transition: 0.3s; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .submit-btn:hover { background-color: #f8f9fa; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { background-color: rgba(255, 255, 255, 0.5); cursor: not-allowed; transform: none; }
+
+        /* Bottom Switch Text */
+        .bottom-text { text-align: center; font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); }
+        .bottom-text a { color: #ffffff; text-decoration: none; font-weight: 700; cursor: pointer; border-bottom: 1px solid transparent; transition: 0.2s; }
+        .bottom-text a:hover { border-bottom-color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <h2 id="formTitle">Welcome Back</h2>
+        <p id="formSubtitle">Please enter your details to sign in.</p>
+
+        <form id="authForm">
+            <div class="input-group" id="nameGroup">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" placeholder="John Doe">
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="intern@company.com" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+                <button type="button" class="toggle-btn" id="togglePassword">Show</button>
+            </div>
+
+            <div class="form-options" id="forgotPasswordDiv">
+                <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Sign In</button>
+            
+            <p class="bottom-text">
+                <span id="toggleText">Don't have an account?</span> 
+                <a id="toggleMode">Create Account</a>
+            </p>
+        </form>
+    </div>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('authForm');
+        const formTitle = document.getElementById('formTitle');
+        const formSubtitle = document.getElementById('formSubtitle');
+        const nameGroup = document.getElementById('nameGroup');
+        const fullnameInput = document.getElementById('fullname');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleModeBtn = document.getElementById('toggleMode');
+        const toggleText = document.getElementById('toggleText');
+        const forgotPasswordDiv = document.getElementById('forgotPasswordDiv');
+
+        let isLoginMode = true; // Mode tracking
+
+        // 1. Switch Mode (Login <-> Sign Up)
+        toggleModeBtn.addEventListener('click', function() {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                formTitle.textContent = 'Welcome Back';
+                formSubtitle.textContent = 'Please enter your details to sign in.';
+                nameGroup.style.display = 'none';
+                fullnameInput.removeAttribute('required');
+                forgotPasswordDiv.style.display = 'flex';
+                submitBtn.textContent = 'Sign In';
+                toggleText.textContent = "Don't have an account?";
+                toggleModeBtn.textContent = "Create Account";
+            } else {
+                formTitle.textContent = 'Create an Account';
+                formSubtitle.textContent = 'Fill in the details to get started.';
+                nameGroup.style.display = 'block';
+                fullnameInput.setAttribute('required', 'true');
+                forgotPasswordDiv.style.display = 'none';
+                submitBtn.textContent = 'Sign Up';
+                toggleText.textContent = "Already have an account?";
+                toggleModeBtn.textContent = "Sign In";
+            }
+        });
+
+        // 2. Toggle Password View
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? 'Show' : 'Hide';
+        });
+
+        // 3. API Integration (Connect with Flask)
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            submitBtn.textContent = isLoginMode ? 'Logging in...' : 'Creating Account...';
+            submitBtn.disabled = true;
+
+            const endpoint = isLoginMode ? 'http://127.0.0.1:5000/login' : 'http://127.0.0.1:5000/signup';
+            const payload = isLoginMode 
+                ? { email: emailInput.value, password: passwordInput.value } 
+                : { fullname: fullnameInput.value, email: emailInput.value, password: passwordInput.value };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("✅ Success: " + data.message);
+                    if (!isLoginMode) {
+                        // Agar signup hua hai, toh form ko wapas login mode me le aao
+                        toggleModeBtn.click();
+                        passwordInput.value = ""; 
+                    } else {
+                        console.log("Your JWT Token is:", data.token);
+                    }
+                } else {
+                    alert("❌ Error: " + data.message);
+                }
+            } catch (error) {
+                alert("⚠️ Server connection failed. Is your Flask backend running?");
+            } finally {
+                submitBtn.textContent = isLoginMode ? 'Sign In' : 'Sign Up';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
